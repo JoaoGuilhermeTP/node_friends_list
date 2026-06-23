@@ -64,7 +64,7 @@ router.post("/",(req,res)=>{
 
 
 // PUT request: Update the details of a user by email ID
-router.put("/:email", (req, res) => {
+router.put("/email/:email", (req, res) => {
   const email = req.params.email;
   const filtered_users = users.filter((user) => user.email === email);
   if (filtered_users.length > 0) {
@@ -107,9 +107,19 @@ router.delete("/:email", (req, res) => {
 });
 
 
+function getDateFromString(strDate) {
+  let [dd, mm, yyyy] = strDate.split('-');
+  return new Date(yyyy + "/" + mm + "/" + dd);
+}
+
 // PUT request: Sort list of friends by date of birth
 router.put("/sort", (req, res) => {
-  
+  let sorted_users = users.sort(function(a, b) {
+    let d1 = getDateFromString(a.DOB);
+    let d2 = getDateFromString(b.DOB);
+    return d1 - d2;
+  });
+  res.send(sorted_users);
 })
 
 module.exports=router;

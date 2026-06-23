@@ -9,6 +9,9 @@ const PORT = 5000;
 // Initialize session middleware with options
 app.use(session({ secret: "fingerpint", resave: true, saveUninitialized: true }));
 
+// Parse JSON request bodies
+app.use(express.json());
+
 // Middleware for user authentication
 app.use("/user", (req, res, next) => {
     // Check if user is authenticated
@@ -31,9 +34,6 @@ app.use("/user", (req, res, next) => {
     }
 });
 
-// Parse JSON request bodies
-app.use(express.json());
-
 // User routes
 app.use("/user", routes);
 
@@ -41,7 +41,7 @@ app.use("/user", routes);
 app.post("/login", (req, res) => {
     const user = req.body.user;
     if (!user) {
-        return res.status(404).json({ message: "Body Empty" });
+        return res.status(400).json({ message: "Body Empty" });
     }
     // Generate JWT access token
     let accessToken = jwt.sign({
